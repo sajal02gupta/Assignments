@@ -1,0 +1,43 @@
+.documentation:hover{
+    background-color: purple;
+}
+
+.download:hover{
+    background-color: rgb(110, 163, 30);
+}
+.demo:hover{
+    background-color: rgb(52, 50, 54);
+}
+.tracker:hover{
+    background-color: rgb(47, 99, 211);
+}
+.development:hover{
+    background-color: rgb(18, 49, 189);
+}
+.translation:hover{
+    background-color: rgb(99, 11, 19);
+}
+.moodlenet:hover{
+    background-color: rgb(238, 81, 8);
+}
+.bg-dark{
+    background-color: black !important;
+}
+.search:hover{
+    background-color: rgb(238, 129, 28);
+}
+.navbar {
+    height: 40px;
+  }
+.searches{
+    color: gray !important;
+}
+.jumbo{
+    margin-top: 20px;
+    background-image:url(https://moodle.org/theme/image.php/moodleorg/theme/1568627409/frontpage/FG-banner2-1024px),url(https://moodle.org/theme/image.php/moodleorg/theme/1568627409/frontpage/BG-banner2-768px);
+    background-attachment: fixed fixed;
+    background-repeat: no-repeat no-repeat;
+    background-position: left right;
+    background-size: cover;
+     
+}
