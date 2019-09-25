@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jSON jQuery</title>
+</head>
+
+<body>
+    <table class="table table-light">
+        <tbody>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="name" /></td>
+            </tr>
+            <tr>
+                <td>Color</td>
+                <td>
+                    <select id="colors" class="form-control" name="">
+                        <option value="red">Red</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Options</td>
+                <td>
+                    Portraits:<input type="checkbox" name="intr" id="intr1" value="portrait" />
+                    Landscape:<input type="checkbox" name="intr" id="intr2" value="landscape" />
+                    Oil Painting:<input type="checkbox" name="intr" id="intr3" value="oil painting" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" id="add">Save</button>
+                    <button type="button" id="btnEdit">Edit</button>
+                </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+    <hr>
+
+    <select id="criteria">
+        <option>Select a value</option>
+        <option value="color">Color</option>
+        <option value="name">Name</option>
+        <option value="opt">Options</option>
+    </select>
+    <input type="text" id="data" />
+    <button id="btnFilter">Filter</button>
+    <button id="btnReset">Reset</button>
+    <hr>
+    <div id="data">
+        <table id="tbl">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Color</th>
+                    <th>Options</th>
+                    <th>...</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+
+        var index = 0;
+        $(document).ready(function(){
+            $("#btnEdit").hide();
+        });
+
+        var objArray = []
+        function User(name, color, opt) {
+            this.id = "";
+            this.name = name;
+            this.color = color;
+            this.opt = opt;
+        }
+        var checks = () => {
+            var opt = [];
+            $.each($("input[name='intr']:checked"), function () {
+                opt.push($(this).val());
+            });
+            return opt;
+        }
+        $("#add").on("click", () => {
+            var user = new User($("#name").val(), $("#colors").val(), checks());
+            objArray.push(user);
+            user.id = objArray.indexOf(user);
+            addRow(user);
+        });
+
+        $("#btnFilter").on("click", function () {
+            $("#tbl > tbody > tr").remove();
+            var filter = $("#criteria").val();
+            var data = $("#data").val();
+            $.each(objArray, function (index, item) {
+                dataFilter(item, filter, data);
+            });
+        });
+
+        $("#btnEdit").on("click", function(){
+            console.log(index);
+            var user =  objArray[index];
+            user.name = $("#name").val();
+            user.color = $("#colors").val();
+            user.opt = checks();
+
+            objArray[index] = user;
+            $("#tbl > tbody > tr").remove();
+            $.each(objArray, function (index, item) {
+                addRow(item);
+            });
+
+            $("#add").show();
+            $("#btnEdit").hide();
+
+        });
+
+        var dataFilter = function (user, filter, data, index) {
+            if (user[filter] == data && filter != "opt") {
+                addRow(user);
+            }
+            if (filter == "opt") {
+                if (user[filter].toString().indexOf(data) != -1) {
+                    addRow(user);
+                }
+            }
+        }
+
+        $("#btnReset").on("click", function () {
+            $("#tbl > tbody > tr").remove();
+            $.each(objArray, function (index, item) {
+                addRow(item);
+            });
+        });
+
+        $(document).on("click", "button.edit", function () {
+            index = $(this).data("index");
+            console.log(index);
+            var user =  objArray[index];
+            
+            $("#name").val(user.name);
+            $("#colors").val(user.color);
+            
+            if(user.opt.toString().indexOf("portrait") != -1){
+                $("#intr1").prop("checked", true);
+            }
+            if(user.opt.toString().indexOf("landscape") != -1){
+                $("#intr2").prop("checked", true);
+            }
+            if(user.opt.toString().indexOf("oil painting") != -1){
+                $("#intr3").prop("checked", true);
+            }
+
+            $("#add").hide();
+            $("#btnEdit").show();
+        });
+
+        var addRow = function (user) {
+            var item = $.parseJSON(JSON.stringify(user));
+            var tr = "";
+            tr += "<tr id='trID"+user.id+"'>";
+            tr += "<td class='name'>";
+            tr += item.name;
+            tr += "</td>";
+            tr += "<td class='color'>";
+            tr += item.color;
+            tr += "</td>";
+            tr += "<td class='options'>";
+            tr += item.opt.toString().split(",").join("<br>");
+            tr += "</td>";
+            tr += "<td class='btns'>";
+            tr += "<button class='edit' data-index='" + user.id + "'>";
+            tr += "Edit</button>";
+            tr += "</td>";
+            tr += "</tr>";
+            $("#tbl > tbody").append(tr);
+            clear();
+        };
+
+        var clear = function() {
+            $("#name").val("");
+            $("#colors").val("");
+            $.each($("input[name='intr']"), function () {
+                $(this).prop("checked", false);
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
